@@ -2,41 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Anonymous Company Review Platform Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core backgrounds */
+    --background: 249 250 251; /* Cool gray-50 */
+    --foreground: 15 23 42; /* Slate-800 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Card system */
+    --card: 255 255 255; /* Pure white */
+    --card-foreground: 15 23 42;
+    --card-hover: 248 250 252; /* Slate-50 */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Interactive elements */
+    --popover: 255 255 255;
+    --popover-foreground: 15 23 42;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Brand colors */
+    --primary: 219 234 254; /* Professional blue-100 */
+    --primary-foreground: 30 58 138; /* Blue-800 */
+    --primary-hover: 191 219 254; /* Blue-200 */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Professional blue for buttons and accents */
+    --brand: 37 99 235; /* Blue-600 */
+    --brand-foreground: 255 255 255;
+    --brand-hover: 29 78 216; /* Blue-700 */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Neutral system */
+    --secondary: 241 245 249; /* Slate-100 */
+    --secondary-foreground: 51 65 85; /* Slate-600 */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 248 250 252; /* Slate-50 */
+    --muted-foreground: 100 116 139; /* Slate-500 */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 241 245 249;
+    --accent-foreground: 15 23 42;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Sentiment colors */
+    --sentiment-positive: 34 197 94; /* Green-500 */
+    --sentiment-positive-bg: 240 253 244; /* Green-50 */
+    --sentiment-negative: 239 68 68; /* Red-500 */
+    --sentiment-negative-bg: 254 242 242; /* Red-50 */
+    --sentiment-neutral: 107 114 128; /* Gray-500 */
+    --sentiment-neutral-bg: 249 250 251; /* Gray-50 */
 
-    --radius: 0.5rem;
+    /* System colors */
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+
+    --border: 226 232 240; /* Slate-200 */
+    --input: 226 232 240;
+    --ring: 37 99 235;
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 

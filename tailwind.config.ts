@@ -22,6 +22,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
+        },
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          foreground: "hsl(var(--brand-foreground))",
+          hover: "hsl(var(--brand-hover))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -46,6 +52,15 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+          hover: "hsl(var(--card-hover))",
+        },
+        sentiment: {
+          positive: "hsl(var(--sentiment-positive))",
+          "positive-bg": "hsl(var(--sentiment-positive-bg))",
+          negative: "hsl(var(--sentiment-negative))",
+          "negative-bg": "hsl(var(--sentiment-negative-bg))",
+          neutral: "hsl(var(--sentiment-neutral))",
+          "neutral-bg": "hsl(var(--sentiment-neutral-bg))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

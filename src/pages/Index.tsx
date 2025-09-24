@@ -1,12 +1,127 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Header } from "@/components/Header";
+import { PostCard } from "@/components/PostCard"; 
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TrendingUp, Clock, ThumbsUp } from "lucide-react";
+import { samplePosts } from "@/data/sampleData";
 
 const Index = () => {
+  const [selectedFeed, setSelectedFeed] = useState("trending");
+
+  const sortedPosts = {
+    trending: [...samplePosts].sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes)),
+    recent: [...samplePosts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    popular: [...samplePosts].sort((a, b) => b.upvotes - a.upvotes)
+  };
+
+  const topTags = ["work-life-balance", "management", "compensation", "culture", "remote-work", "learning"];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Feed */}
+          <div className="lg:col-span-3">
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold text-foreground mb-2">Company Reviews & Discussions</h1>
+              <p className="text-muted-foreground">
+                Anonymous insights from employees across the industry
+              </p>
+            </div>
+
+            {/* Feed Tabs */}
+            <Tabs value={selectedFeed} onValueChange={setSelectedFeed} className="mb-6">
+              <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
+                <TabsTrigger value="trending" className="flex items-center">
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  Trending
+                </TabsTrigger>
+                <TabsTrigger value="recent" className="flex items-center">
+                  <Clock className="w-4 h-4 mr-2" />
+                  Recent
+                </TabsTrigger>
+                <TabsTrigger value="popular" className="flex items-center">
+                  <ThumbsUp className="w-4 h-4 mr-2" />
+                  Popular
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="trending" className="space-y-4">
+                {sortedPosts.trending.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </TabsContent>
+
+              <TabsContent value="recent" className="space-y-4">
+                {sortedPosts.recent.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </TabsContent>
+
+              <TabsContent value="popular" className="space-y-4">
+                {sortedPosts.popular.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="space-y-6">
+              {/* Popular Tags */}
+              <div className="bg-card p-6 rounded-lg border">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Popular Topics</h3>
+                <div className="flex flex-wrap gap-2">
+                  {topTags.map((tag) => (
+                    <Badge 
+                      key={tag} 
+                      variant="secondary" 
+                      className="cursor-pointer hover:bg-brand hover:text-brand-foreground transition-colors"
+                    >
+                      #{tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="bg-card p-6 rounded-lg border">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Platform Stats</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total Posts</span>
+                    <span className="font-medium">1,247</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Companies</span>
+                    <span className="font-medium">156</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Active Users</span>
+                    <span className="font-medium">3,429</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* About */}
+              <div className="bg-card p-6 rounded-lg border">
+                <h3 className="text-lg font-semibold text-foreground mb-3">About CompanyVoice</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  A safe space for employees to share honest company reviews and workplace discussions anonymously.
+                </p>
+                <Button variant="outline" size="sm" className="w-full">
+                  Learn More
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
