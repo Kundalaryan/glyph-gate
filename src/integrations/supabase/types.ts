@@ -14,7 +14,128 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      companies: {
+        Row: {
+          average_rating: number | null
+          created_at: string
+          id: string
+          industry: string
+          location: string
+          name: string
+          post_count: number | null
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          average_rating?: number | null
+          created_at?: string
+          id?: string
+          industry: string
+          location: string
+          name: string
+          post_count?: number | null
+          tier: string
+          updated_at?: string
+        }
+        Update: {
+          average_rating?: number | null
+          created_at?: string
+          id?: string
+          industry?: string
+          location?: string
+          name?: string
+          post_count?: number | null
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      posts: {
+        Row: {
+          comment_count: number | null
+          company_id: string
+          company_name: string
+          content: string
+          created_at: string
+          downvotes: number | null
+          id: string
+          is_anonymous: boolean | null
+          sentiment: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          upvotes: number | null
+          user_id: string | null
+        }
+        Insert: {
+          comment_count?: number | null
+          company_id: string
+          company_name: string
+          content: string
+          created_at?: string
+          downvotes?: number | null
+          id?: string
+          is_anonymous?: boolean | null
+          sentiment: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          upvotes?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          comment_count?: number | null
+          company_id?: string
+          company_name?: string
+          content?: string
+          created_at?: string
+          downvotes?: number | null
+          id?: string
+          is_anonymous?: boolean | null
+          sentiment?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          upvotes?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

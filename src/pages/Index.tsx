@@ -5,15 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, Clock, ThumbsUp } from "lucide-react";
-import { samplePosts } from "@/data/sampleData";
+import { usePosts } from "@/hooks/usePosts";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const { posts, loading } = usePosts();
+  const navigate = useNavigate();
   const [selectedFeed, setSelectedFeed] = useState("trending");
 
   const sortedPosts = {
-    trending: [...samplePosts].sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes)),
-    recent: [...samplePosts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-    popular: [...samplePosts].sort((a, b) => b.upvotes - a.upvotes)
+    trending: [...posts].sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes)),
+    recent: [...posts].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
+    popular: [...posts].sort((a, b) => b.upvotes - a.upvotes)
   };
 
   const topTags = ["work-life-balance", "management", "compensation", "culture", "remote-work", "learning"];
@@ -33,41 +36,79 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Feed Tabs */}
-            <Tabs value={selectedFeed} onValueChange={setSelectedFeed} className="mb-6">
-              <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
-                <TabsTrigger value="trending" className="flex items-center">
-                  <TrendingUp className="w-4 h-4 mr-2" />
-                  Trending
-                </TabsTrigger>
-                <TabsTrigger value="recent" className="flex items-center">
-                  <Clock className="w-4 h-4 mr-2" />
-                  Recent
-                </TabsTrigger>
-                <TabsTrigger value="popular" className="flex items-center">
-                  <ThumbsUp className="w-4 h-4 mr-2" />
-                  Popular
-                </TabsTrigger>
-              </TabsList>
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Loading posts...</p>
+              </div>
+            ) : (
+              <>
+                {/* Feed Tabs */}
+                <Tabs value={selectedFeed} onValueChange={setSelectedFeed} className="mb-6">
+                  <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
+                    <TabsTrigger value="trending" className="flex items-center">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Trending
+                    </TabsTrigger>
+                    <TabsTrigger value="recent" className="flex items-center">
+                      <Clock className="w-4 h-4 mr-2" />
+                      Recent
+                    </TabsTrigger>
+                    <TabsTrigger value="popular" className="flex items-center">
+                      <ThumbsUp className="w-4 h-4 mr-2" />
+                      Popular
+                    </TabsTrigger>
+                  </TabsList>
 
-              <TabsContent value="trending" className="space-y-4">
-                {sortedPosts.trending.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </TabsContent>
+                  <TabsContent value="trending" className="space-y-4">
+                    {sortedPosts.trending.map((post) => (
+                      <PostCard 
+                        key={post.id} 
+                        post={{
+                          ...post,
+                          companyId: post.company_id,
+                          companyName: post.company_name,
+                          commentCount: post.comment_count,
+                          createdAt: post.created_at,
+                          isAnonymous: post.is_anonymous
+                        }}
+                      />
+                    ))}
+                  </TabsContent>
 
-              <TabsContent value="recent" className="space-y-4">
-                {sortedPosts.recent.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </TabsContent>
+                  <TabsContent value="recent" className="space-y-4">
+                    {sortedPosts.recent.map((post) => (
+                      <PostCard 
+                        key={post.id} 
+                        post={{
+                          ...post,
+                          companyId: post.company_id,
+                          companyName: post.company_name,
+                          commentCount: post.comment_count,
+                          createdAt: post.created_at,
+                          isAnonymous: post.is_anonymous
+                        }}
+                      />
+                    ))}
+                  </TabsContent>
 
-              <TabsContent value="popular" className="space-y-4">
-                {sortedPosts.popular.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </TabsContent>
-            </Tabs>
+                  <TabsContent value="popular" className="space-y-4">
+                    {sortedPosts.popular.map((post) => (
+                      <PostCard 
+                        key={post.id} 
+                        post={{
+                          ...post,
+                          companyId: post.company_id,
+                          companyName: post.company_name,
+                          commentCount: post.comment_count,
+                          createdAt: post.created_at,
+                          isAnonymous: post.is_anonymous
+                        }}
+                      />
+                    ))}
+                  </TabsContent>
+                </Tabs>
+              </>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -95,15 +136,15 @@ const Index = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Total Posts</span>
-                    <span className="font-medium">1,247</span>
+                    <span className="font-medium">{posts.length}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Companies</span>
-                    <span className="font-medium">156</span>
+                    <span className="font-medium">5</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Active Users</span>
-                    <span className="font-medium">3,429</span>
+                    <span className="font-medium">Growing</span>
                   </div>
                 </div>
               </div>
@@ -114,8 +155,13 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground mb-4">
                   A safe space for employees to share honest company reviews and workplace discussions anonymously.
                 </p>
-                <Button variant="outline" size="sm" className="w-full">
-                  Learn More
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full"
+                  onClick={() => navigate('/companies')}
+                >
+                  Browse Companies
                 </Button>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { CompanyCard } from "@/components/CompanyCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { sampleCompanies } from "@/data/sampleData";
+import { useCompanies } from "@/hooks/useCompanies";
 import { useNavigate } from "react-router-dom";
 
 const industries = ["All", "Technology", "Data Analytics", "Software Development", "Cloud Services", "Robotics", "Financial Services"];
@@ -16,8 +16,9 @@ export default function CompanyDirectory() {
   const [selectedIndustry, setSelectedIndustry] = useState("All");
   const [selectedTier, setSelectedTier] = useState("All");
   const navigate = useNavigate();
+  const { companies, loading } = useCompanies();
 
-  const filteredCompanies = sampleCompanies.filter(company => {
+  const filteredCompanies = companies.filter(company => {
     const matchesSearch = company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          company.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesIndustry = selectedIndustry === "All" || company.industry === selectedIndustry;
@@ -114,15 +115,25 @@ export default function CompanyDirectory() {
         </div>
 
         {/* Companies Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCompanies.map((company) => (
-            <CompanyCard
-              key={company.id}
-              company={company}
-              onClick={() => navigate(`/company/${company.id}`)}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Loading companies...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCompanies.map((company) => (
+              <CompanyCard
+                key={company.id}
+                company={{
+                  ...company,
+                  postCount: company.post_count,
+                  averageRating: company.average_rating
+                }}
+                onClick={() => navigate(`/company/${company.id}`)}
+              />
+            ))}
+          </div>
+        )}
 
         {filteredCompanies.length === 0 && (
           <div className="text-center py-12">

@@ -7,15 +7,30 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { sampleCompanies, samplePosts } from "@/data/sampleData";
+import { useCompanies } from "@/hooks/useCompanies";
+import { usePosts } from "@/hooks/usePosts";
 
 export default function CompanyDetail() {
   const { companyId } = useParams();
   const [selectedTab, setSelectedTab] = useState("posts");
+  const { companies, loading: companiesLoading } = useCompanies();
+  const { posts: companyPosts, loading: postsLoading } = usePosts(companyId);
   
-  const company = sampleCompanies.find(c => c.id === companyId);
-  const companyPosts = samplePosts.filter(post => post.companyId === companyId);
+  const company = companies.find(c => c.id === companyId);
   
+  if (companiesLoading || postsLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Loading company details...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!company) {
     return (
       <div className="min-h-screen bg-background">
@@ -35,7 +50,7 @@ export default function CompanyDetail() {
 
   const sortedPosts = {
     trending: [...companyPosts].sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes)),
-    recent: [...companyPosts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    recent: [...companyPosts].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
     popular: [...companyPosts].sort((a, b) => b.upvotes - a.upvotes)
   };
 
@@ -97,7 +112,7 @@ export default function CompanyDetail() {
                   </div>
                   <div className="flex items-center">
                     <Star className="w-4 h-4 mr-1 fill-current text-yellow-500" />
-                    {company.averageRating}/5.0
+                    {company.average_rating}/5.0
                   </div>
                 </div>
                 <Badge variant="outline" className={getTierColor(company.tier)}>
@@ -114,7 +129,7 @@ export default function CompanyDetail() {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t">
             <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">{company.postCount}</div>
+              <div className="text-2xl font-bold text-foreground">{company.post_count}</div>
               <div className="text-sm text-muted-foreground">Total Posts</div>
             </div>
             <div className="text-center">
@@ -174,7 +189,19 @@ export default function CompanyDetail() {
                 {/* Posts */}
                 <div className="space-y-4">
                   {sortedPosts.trending.map((post) => (
-                    <PostCard key={post.id} post={post} />
+                    <PostCard 
+                      key={post.id} 
+                      post={{
+                        ...post,
+                        companyId: post.company_id,
+                        companyName: post.company_name,
+                        upvotes: post.upvotes,
+                        downvotes: post.downvotes,
+                        commentCount: post.comment_count,
+                        createdAt: post.created_at,
+                        isAnonymous: post.is_anonymous
+                      }} 
+                    />
                   ))}
                 </div>
               </div>
@@ -241,7 +268,7 @@ export default function CompanyDetail() {
                 </div>
                 <div>
                   <span className="font-medium text-foreground">Overall Rating:</span>
-                  <span className="ml-2 text-muted-foreground">{company.averageRating}/5.0 stars</span>
+                  <span className="ml-2 text-muted-foreground">{company.average_rating}/5.0 stars</span>
                 </div>
               </div>
             </Card>
