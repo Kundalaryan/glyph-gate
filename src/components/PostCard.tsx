@@ -1,7 +1,8 @@
-import { ChevronUp, ChevronDown, MessageCircle, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { PostVoting } from "@/components/PostVoting";
+import { CommentSection } from "@/components/CommentSection";
 import type { Post } from "@/data/sampleData";
 
 interface PostCardProps {
@@ -79,23 +80,22 @@ export function PostCard({ post, onClick }: PostCardProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-1">
-            <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground hover:text-sentiment-positive">
-              <ChevronUp className="w-4 h-4" />
-              <span className="ml-1 text-sm">{post.upvotes}</span>
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground hover:text-sentiment-negative">
-              <ChevronDown className="w-4 h-4" />
-              <span className="ml-1 text-sm">{post.downvotes}</span>
-            </Button>
-          </div>
-          <div className="flex items-center text-muted-foreground">
-            <MessageCircle className="w-4 h-4 mr-1" />
-            <span className="text-sm">{post.commentCount} comments</span>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <PostVoting 
+              postId={post.id}
+              upvotes={post.upvotes}
+              downvotes={post.downvotes}
+            />
           </div>
         </div>
+
+        {/* Comments Section */}
+        <CommentSection 
+          postId={post.id}
+          commentCount={post.commentCount}
+        />
       </div>
     </Card>
   );
