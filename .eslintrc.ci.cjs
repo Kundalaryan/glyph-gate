@@ -1,9 +1,9 @@
-{
-  "extends": "./.eslintrc.json",
-  "rules": {
+module.exports = {
+  extends: "./.eslintrc.json",
+  rules: {
     "@typescript-eslint/no-empty-object-type": "off",
     "@typescript-eslint/no-require-imports": "off",
     "react-refresh/only-export-components": "warn",
     "react-hooks/exhaustive-deps": "warn"
   }
-}
+};

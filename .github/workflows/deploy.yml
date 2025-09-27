@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npx eslint . --config .eslintrc.ci.json
+        run: npx eslint . --config .eslintrc.ci.cjs
 
       - name: Type Check
         run: npm run type-check --if-present
@@ -36,7 +36,6 @@ jobs:
 
       - name: Add cache-busting meta tag
         run: |
-          # Inject a meta tag with a build timestamp to force browsers to reload index.html
           BUILD_DATE=$(date +%s)
           sed -i "s|<head>|<head>\n    <meta http-equiv='Cache-Control' content='no-cache, no-store, must-revalidate'>\n    <meta http-equiv='Pragma' content='no-cache'>\n    <meta http-equiv='Expires' content='0'>\n    <meta name='build-timestamp' content='$BUILD_DATE'>|" dist/index.html
 
