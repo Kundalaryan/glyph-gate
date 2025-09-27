@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint --if-present
+        run: npx eslint . --config .eslintrc.ci.json
 
       - name: Type Check
         run: npm run type-check --if-present
