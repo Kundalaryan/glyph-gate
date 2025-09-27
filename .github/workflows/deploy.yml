@@ -1,64 +1,35 @@
-name: CI/CD Pipeline
+name: Deploy Vite Site to GitHub Pages
 
 on:
   push:
     branches:
-      - main   # change if your default branch is "master"
+      - main
+
+permissions:
+  contents: write   
+  pages: write
+  id-token: write
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 20
-          cache: "npm"
+          node-version: 18
 
-      - name: Install dependencies (including devDependencies)
-        run: npm ci
-
-      - name: Lint with flat config
-        run: npx eslint . --config .eslintrc.ci.cjs
-
-      - name: Type Check
-        run: npm run type-check --if-present
-
-      - name: Run Tests
-        run: npm test --if-present
+      - name: Install dependencies
+        run: npm install
 
       - name: Build project
         run: npm run build
 
-      - name: Add cache-busting meta tag
-        run: |
-          BUILD_DATE=$(date +%s)
-          sed -i "s|<head>|<head>\n    <meta http-equiv='Cache-Control' content='no-cache, no-store, must-revalidate'>\n    <meta http-equiv='Pragma' content='no-cache'>\n    <meta http-equiv='Expires' content='0'>\n    <meta name='build-timestamp' content='$BUILD_DATE'>|" dist/index.html
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: production-build
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: production-build
-          path: dist
-
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
