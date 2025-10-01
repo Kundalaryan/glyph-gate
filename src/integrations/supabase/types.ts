@@ -18,8 +18,12 @@ export type Database = {
         Row: {
           content: string
           created_at: string
+          hidden_at: string | null
+          hidden_by: string | null
+          hidden_reason: string | null
           id: string
           is_anonymous: boolean | null
+          is_hidden: boolean
           post_id: string
           updated_at: string
           user_id: string | null
@@ -27,8 +31,12 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string
+          hidden_at?: string | null
+          hidden_by?: string | null
+          hidden_reason?: string | null
           id?: string
           is_anonymous?: boolean | null
+          is_hidden?: boolean
           post_id: string
           updated_at?: string
           user_id?: string | null
@@ -36,8 +44,12 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string
+          hidden_at?: string | null
+          hidden_by?: string | null
+          hidden_reason?: string | null
           id?: string
           is_anonymous?: boolean | null
+          is_hidden?: boolean
           post_id?: string
           updated_at?: string
           user_id?: string | null
@@ -48,35 +60,83 @@ export type Database = {
         Row: {
           average_rating: number | null
           created_at: string
+          hidden_at: string | null
+          hidden_by: string | null
           id: string
           industry: string
+          is_hidden: boolean
+          is_verified: boolean
           location: string
           name: string
           post_count: number | null
           tier: string
           updated_at: string
+          verified_at: string | null
+          verified_by: string | null
         }
         Insert: {
           average_rating?: number | null
           created_at?: string
+          hidden_at?: string | null
+          hidden_by?: string | null
           id?: string
           industry: string
+          is_hidden?: boolean
+          is_verified?: boolean
           location: string
           name: string
           post_count?: number | null
           tier: string
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Update: {
           average_rating?: number | null
           created_at?: string
+          hidden_at?: string | null
+          hidden_by?: string | null
           id?: string
           industry?: string
+          is_hidden?: boolean
+          is_verified?: boolean
           location?: string
           name?: string
           post_count?: number | null
           tier?: string
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
+      moderation_logs: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string
+          id: string
+          reason: string | null
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          target_id?: string
+          target_type?: string
         }
         Relationships: []
       }
@@ -166,6 +226,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       votes: {
         Row: {
           created_at: string
@@ -195,10 +276,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -325,6 +412,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

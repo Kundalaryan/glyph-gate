@@ -1,13 +1,15 @@
-import { Search, Plus, MessageCircle, User, LogOut } from "lucide-react";
+import { Search, Plus, MessageCircle, User, LogOut, Shield } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
 
 export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   
   const isActive = (path: string) => location.pathname === path;
 
@@ -56,6 +58,17 @@ export function Header() {
           >
             Companies
           </Link>
+          {isAdmin && (
+            <Link 
+              to="/admin" 
+              className={`text-sm font-medium transition-colors hover:text-brand flex items-center ${
+                isActive('/admin') ? 'text-brand' : 'text-muted-foreground'
+              }`}
+            >
+              <Shield className="w-4 h-4 mr-1" />
+              Admin
+            </Link>
+          )}
           {user ? (
             <>
               <Button size="sm" className="bg-brand hover:bg-brand-hover text-brand-foreground">

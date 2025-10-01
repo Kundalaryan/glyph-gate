@@ -9,6 +9,12 @@ export interface Company {
   tier: string;
   average_rating: number;
   post_count: number;
+  is_verified?: boolean;
+  is_hidden?: boolean;
+  verified_by?: string;
+  verified_at?: string;
+  hidden_by?: string;
+  hidden_at?: string;
 }
 
 export function useCompanies() {

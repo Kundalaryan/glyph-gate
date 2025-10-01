@@ -10,6 +10,10 @@ export interface Comment {
   is_anonymous: boolean;
   created_at: string;
   display_name?: string;
+  is_hidden?: boolean;
+  hidden_by?: string;
+  hidden_at?: string;
+  hidden_reason?: string;
 }
 
 export function useComments(postId?: string) {
