@@ -61,49 +61,19 @@ const Index = () => {
 
                   <TabsContent value="trending" className="space-y-4">
                     {sortedPosts.trending.map((post) => (
-                      <PostCard 
-                        key={post.id} 
-                        post={{
-                          ...post,
-                          companyId: post.company_id,
-                          companyName: post.company_name,
-                          commentCount: post.comment_count,
-                          createdAt: post.created_at,
-                          isAnonymous: post.is_anonymous
-                        }}
-                      />
+                      <PostCard key={post.id} post={post} />
                     ))}
                   </TabsContent>
 
                   <TabsContent value="recent" className="space-y-4">
                     {sortedPosts.recent.map((post) => (
-                      <PostCard 
-                        key={post.id} 
-                        post={{
-                          ...post,
-                          companyId: post.company_id,
-                          companyName: post.company_name,
-                          commentCount: post.comment_count,
-                          createdAt: post.created_at,
-                          isAnonymous: post.is_anonymous
-                        }}
-                      />
+                      <PostCard key={post.id} post={post} />
                     ))}
                   </TabsContent>
 
                   <TabsContent value="popular" className="space-y-4">
                     {sortedPosts.popular.map((post) => (
-                      <PostCard 
-                        key={post.id} 
-                        post={{
-                          ...post,
-                          companyId: post.company_id,
-                          companyName: post.company_name,
-                          commentCount: post.comment_count,
-                          createdAt: post.created_at,
-                          isAnonymous: post.is_anonymous
-                        }}
-                      />
+                      <PostCard key={post.id} post={post} />
                     ))}
                   </TabsContent>
                 </Tabs>

@@ -189,19 +189,7 @@ export default function CompanyDetail() {
                 {/* Posts */}
                 <div className="space-y-4">
                   {sortedPosts.trending.map((post) => (
-                    <PostCard 
-                      key={post.id} 
-                      post={{
-                        ...post,
-                        companyId: post.company_id,
-                        companyName: post.company_name,
-                        upvotes: post.upvotes,
-                        downvotes: post.downvotes,
-                        commentCount: post.comment_count,
-                        createdAt: post.created_at,
-                        isAnonymous: post.is_anonymous
-                      }} 
-                    />
+                    <PostCard key={post.id} post={post} />
                   ))}
                 </div>
               </div>

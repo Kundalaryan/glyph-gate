@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PostVoting } from "@/components/PostVoting";
 import { CommentSection } from "@/components/CommentSection";
-import type { Post } from "@/data/sampleData";
+import type { Post } from "@/hooks/usePosts";
 
 interface PostCardProps {
   post: Post;
@@ -47,11 +47,11 @@ export function PostCard({ post, onClick }: PostCardProps) {
             {post.title}
           </h3>
           <div className="flex items-center text-sm text-muted-foreground space-x-2">
-            <span className="font-medium text-brand">{post.companyName}</span>
+            <span className="font-medium text-brand">{post.company_name}</span>
             <span>•</span>
             <div className="flex items-center">
               <Clock className="w-3 h-3 mr-1" />
-              {formatTimeAgo(post.createdAt)}
+              {formatTimeAgo(post.created_at)}
             </div>
             <span>•</span>
             <span>Anonymous</span>
@@ -94,7 +94,7 @@ export function PostCard({ post, onClick }: PostCardProps) {
         {/* Comments Section */}
         <CommentSection 
           postId={post.id}
-          commentCount={post.commentCount}
+          commentCount={post.comment_count}
         />
       </div>
     </Card>
