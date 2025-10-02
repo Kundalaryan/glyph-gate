@@ -11,9 +11,10 @@ interface PostCardProps {
   post: Post;
   onClick?: () => void;
   onAnalysisComplete?: () => void;
+  onTagClick?: (tag: string) => void;
 }
 
-export function PostCard({ post, onClick, onAnalysisComplete }: PostCardProps) {
+export function PostCard({ post, onClick, onAnalysisComplete, onTagClick }: PostCardProps) {
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -76,8 +77,16 @@ export function PostCard({ post, onClick, onAnalysisComplete }: PostCardProps) {
       {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-4">
         {post.tags.map((tag) => (
-          <Badge key={tag} variant="secondary" className="text-xs">
-            {tag}
+          <Badge 
+            key={tag} 
+            variant="secondary" 
+            className="text-xs cursor-pointer hover:bg-brand hover:text-brand-foreground transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              onTagClick?.(tag);
+            }}
+          >
+            #{tag}
           </Badge>
         ))}
       </div>

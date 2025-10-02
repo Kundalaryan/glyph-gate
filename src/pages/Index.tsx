@@ -4,19 +4,25 @@ import { PostCard } from "@/components/PostCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Clock, ThumbsUp } from "lucide-react";
+import { TrendingUp, Clock, ThumbsUp, X } from "lucide-react";
 import { usePosts } from "@/hooks/usePosts";
 import { useNavigate } from "react-router-dom";
+import { Footer } from "@/components/Footer";
 
 const Index = () => {
   const { posts, loading, refetch } = usePosts();
   const navigate = useNavigate();
   const [selectedFeed, setSelectedFeed] = useState("trending");
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
+  const filteredPosts = selectedTag
+    ? posts.filter(post => post.tags.includes(selectedTag))
+    : posts;
 
   const sortedPosts = {
-    trending: [...posts].sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes)),
-    recent: [...posts].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
-    popular: [...posts].sort((a, b) => b.upvotes - a.upvotes)
+    trending: [...filteredPosts].sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes)),
+    recent: [...filteredPosts].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
+    popular: [...filteredPosts].sort((a, b) => b.upvotes - a.upvotes)
   };
 
   const topTags = ["work-life-balance", "management", "compensation", "culture", "remote-work", "learning"];
@@ -30,10 +36,25 @@ const Index = () => {
           {/* Main Feed */}
           <div className="lg:col-span-3">
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-foreground mb-2">Company Reviews & Discussions</h1>
-              <p className="text-muted-foreground">
-                Anonymous insights from employees across the industry
-              </p>
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground mb-2">Company Reviews & Discussions</h1>
+                  <p className="text-muted-foreground">
+                    Anonymous insights from employees across the industry
+                  </p>
+                </div>
+                {selectedTag && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedTag(null)}
+                    className="flex items-center gap-2"
+                  >
+                    <X className="w-4 h-4" />
+                    Clear filter: #{selectedTag}
+                  </Button>
+                )}
+              </div>
             </div>
 
             {loading ? (
@@ -61,19 +82,34 @@ const Index = () => {
 
                   <TabsContent value="trending" className="space-y-4">
                     {sortedPosts.trending.map((post) => (
-                      <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
+                      <PostCard 
+                        key={post.id} 
+                        post={post} 
+                        onAnalysisComplete={refetch}
+                        onTagClick={setSelectedTag}
+                      />
                     ))}
                   </TabsContent>
 
                   <TabsContent value="recent" className="space-y-4">
                     {sortedPosts.recent.map((post) => (
-                      <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
+                      <PostCard 
+                        key={post.id} 
+                        post={post} 
+                        onAnalysisComplete={refetch}
+                        onTagClick={setSelectedTag}
+                      />
                     ))}
                   </TabsContent>
 
                   <TabsContent value="popular" className="space-y-4">
                     {sortedPosts.popular.map((post) => (
-                      <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
+                      <PostCard 
+                        key={post.id} 
+                        post={post} 
+                        onAnalysisComplete={refetch}
+                        onTagClick={setSelectedTag}
+                      />
                     ))}
                   </TabsContent>
                 </Tabs>
@@ -91,8 +127,9 @@ const Index = () => {
                   {topTags.map((tag) => (
                     <Badge 
                       key={tag} 
-                      variant="secondary" 
+                      variant={selectedTag === tag ? "default" : "secondary"}
                       className="cursor-pointer hover:bg-brand hover:text-brand-foreground transition-colors"
+                      onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
                     >
                       #{tag}
                     </Badge>
@@ -138,6 +175,8 @@ const Index = () => {
           </div>
         </div>
       </main>
+      
+      <Footer />
     </div>
   );
 };
