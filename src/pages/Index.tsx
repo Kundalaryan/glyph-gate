@@ -9,7 +9,7 @@ import { usePosts } from "@/hooks/usePosts";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
-  const { posts, loading } = usePosts();
+  const { posts, loading, refetch } = usePosts();
   const navigate = useNavigate();
   const [selectedFeed, setSelectedFeed] = useState("trending");
 
@@ -61,19 +61,19 @@ const Index = () => {
 
                   <TabsContent value="trending" className="space-y-4">
                     {sortedPosts.trending.map((post) => (
-                      <PostCard key={post.id} post={post} />
+                      <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
                     ))}
                   </TabsContent>
 
                   <TabsContent value="recent" className="space-y-4">
                     {sortedPosts.recent.map((post) => (
-                      <PostCard key={post.id} post={post} />
+                      <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
                     ))}
                   </TabsContent>
 
                   <TabsContent value="popular" className="space-y-4">
                     {sortedPosts.popular.map((post) => (
-                      <PostCard key={post.id} post={post} />
+                      <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
                     ))}
                   </TabsContent>
                 </Tabs>

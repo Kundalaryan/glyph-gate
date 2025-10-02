@@ -3,14 +3,17 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PostVoting } from "@/components/PostVoting";
 import { CommentSection } from "@/components/CommentSection";
+import { AIContextCard } from "@/components/AIContextCard";
 import type { Post } from "@/hooks/usePosts";
+import { useState } from "react";
 
 interface PostCardProps {
   post: Post;
   onClick?: () => void;
+  onAnalysisComplete?: () => void;
 }
 
-export function PostCard({ post, onClick }: PostCardProps) {
+export function PostCard({ post, onClick, onAnalysisComplete }: PostCardProps) {
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -77,6 +80,16 @@ export function PostCard({ post, onClick }: PostCardProps) {
             {tag}
           </Badge>
         ))}
+      </div>
+
+      {/* AI Context */}
+      <div className="mb-4">
+        <AIContextCard 
+          postId={post.id}
+          aiContext={post.ai_context}
+          aiAnalyzedAt={post.ai_analyzed_at}
+          onAnalysisComplete={onAnalysisComplete}
+        />
       </div>
 
       {/* Actions */}

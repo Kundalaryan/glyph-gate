@@ -15,6 +15,8 @@ export interface Post {
   comment_count: number;
   is_anonymous: boolean;
   created_at: string;
+  ai_context?: string | null;
+  ai_analyzed_at?: string | null;
 }
 
 export function usePosts(companyId?: string) {

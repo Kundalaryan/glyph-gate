@@ -142,6 +142,8 @@ export type Database = {
       }
       posts: {
         Row: {
+          ai_analyzed_at: string | null
+          ai_context: string | null
           comment_count: number | null
           company_id: string
           company_name: string
@@ -158,6 +160,8 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          ai_analyzed_at?: string | null
+          ai_context?: string | null
           comment_count?: number | null
           company_id: string
           company_name: string
@@ -174,6 +178,8 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          ai_analyzed_at?: string | null
+          ai_context?: string | null
           comment_count?: number | null
           company_id?: string
           company_name?: string

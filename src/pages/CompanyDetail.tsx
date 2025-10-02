@@ -14,7 +14,7 @@ export default function CompanyDetail() {
   const { companyId } = useParams();
   const [selectedTab, setSelectedTab] = useState("posts");
   const { companies, loading: companiesLoading } = useCompanies();
-  const { posts: companyPosts, loading: postsLoading } = usePosts(companyId);
+  const { posts: companyPosts, loading: postsLoading, refetch } = usePosts(companyId);
   
   const company = companies.find(c => c.id === companyId);
   
@@ -189,7 +189,7 @@ export default function CompanyDetail() {
                 {/* Posts */}
                 <div className="space-y-4">
                   {sortedPosts.trending.map((post) => (
-                    <PostCard key={post.id} post={post} />
+                    <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
                   ))}
                 </div>
               </div>
