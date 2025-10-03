@@ -6,11 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, Clock, ThumbsUp, X } from "lucide-react";
 import { usePosts } from "@/hooks/usePosts";
+import { usePlatformStats } from "@/hooks/usePlatformStats";
 import { useNavigate } from "react-router-dom";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
   const { posts, loading, refetch } = usePosts();
+  const { stats } = usePlatformStats();
   const navigate = useNavigate();
   const [selectedFeed, setSelectedFeed] = useState("trending");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -147,11 +149,15 @@ const Index = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Companies</span>
-                    <span className="font-medium">5</span>
+                    <span className="font-medium">{stats.totalCompanies}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Active Users</span>
-                    <span className="font-medium">Growing</span>
+                    <span className="font-medium">{stats.totalUsers}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total Comments</span>
+                    <span className="font-medium">{stats.totalComments}</span>
                   </div>
                 </div>
               </div>
