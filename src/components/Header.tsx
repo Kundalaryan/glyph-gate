@@ -1,4 +1,4 @@
-import { Search, Plus, MessageCircle, User, LogOut, Shield } from "lucide-react";
+import { Search, Plus, MessageCircle, User, LogOut, Shield, Building2 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,9 +71,21 @@ export function Header() {
           )}
           {user ? (
             <>
-              <Button size="sm" className="bg-brand hover:bg-brand-hover text-brand-foreground">
+              <Button 
+                size="sm" 
+                className="bg-brand hover:bg-brand-hover text-brand-foreground"
+                onClick={() => navigate('/add-post')}
+              >
                 <Plus className="w-4 h-4 mr-1" />
                 New Post
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => navigate('/add-company')}
+              >
+                <Building2 className="w-4 h-4 mr-1" />
+                Add Company
               </Button>
               <div className="flex items-center space-x-2 text-sm">
                 <User className="h-4 w-4" />

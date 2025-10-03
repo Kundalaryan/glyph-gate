@@ -58,7 +58,9 @@ export type Database = {
       }
       companies: {
         Row: {
+          address: string | null
           average_rating: number | null
+          company_type: string | null
           created_at: string
           hidden_at: string | null
           hidden_by: string | null
@@ -70,12 +72,15 @@ export type Database = {
           name: string
           post_count: number | null
           tier: string
+          timings: string | null
           updated_at: string
           verified_at: string | null
           verified_by: string | null
         }
         Insert: {
+          address?: string | null
           average_rating?: number | null
+          company_type?: string | null
           created_at?: string
           hidden_at?: string | null
           hidden_by?: string | null
@@ -87,12 +92,15 @@ export type Database = {
           name: string
           post_count?: number | null
           tier: string
+          timings?: string | null
           updated_at?: string
           verified_at?: string | null
           verified_by?: string | null
         }
         Update: {
+          address?: string | null
           average_rating?: number | null
+          company_type?: string | null
           created_at?: string
           hidden_at?: string | null
           hidden_by?: string | null
@@ -104,6 +112,7 @@ export type Database = {
           name?: string
           post_count?: number | null
           tier?: string
+          timings?: string | null
           updated_at?: string
           verified_at?: string | null
           verified_by?: string | null

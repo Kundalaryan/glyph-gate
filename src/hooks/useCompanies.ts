@@ -15,6 +15,9 @@ export interface Company {
   verified_at?: string;
   hidden_by?: string;
   hidden_at?: string;
+  address?: string;
+  company_type?: 'product' | 'service';
+  timings?: string;
 }
 
 export function useCompanies() {
@@ -31,7 +34,10 @@ export function useCompanies() {
         .order('name');
 
       if (error) throw error;
-      setCompanies(data || []);
+      setCompanies((data || []).map(company => ({
+        ...company,
+        company_type: company.company_type as 'product' | 'service' | undefined
+      })));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
