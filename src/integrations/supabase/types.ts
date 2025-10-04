@@ -288,7 +288,113 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      comments_secure: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          hidden_at: string | null
+          hidden_by: string | null
+          hidden_reason: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          is_hidden: boolean | null
+          post_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          hidden_at?: string | null
+          hidden_by?: string | null
+          hidden_reason?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          is_hidden?: boolean | null
+          post_id?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          hidden_at?: string | null
+          hidden_by?: string | null
+          hidden_reason?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          is_hidden?: boolean | null
+          post_id?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Relationships: []
+      }
+      posts_secure: {
+        Row: {
+          ai_analyzed_at: string | null
+          ai_context: string | null
+          comment_count: number | null
+          company_id: string | null
+          company_name: string | null
+          content: string | null
+          created_at: string | null
+          downvotes: number | null
+          id: string | null
+          is_anonymous: boolean | null
+          sentiment: string | null
+          tags: string[] | null
+          title: string | null
+          updated_at: string | null
+          upvotes: number | null
+          user_id: string | null
+        }
+        Insert: {
+          ai_analyzed_at?: string | null
+          ai_context?: string | null
+          comment_count?: number | null
+          company_id?: string | null
+          company_name?: string | null
+          content?: string | null
+          created_at?: string | null
+          downvotes?: number | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          sentiment?: string | null
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string | null
+          upvotes?: number | null
+          user_id?: never
+        }
+        Update: {
+          ai_analyzed_at?: string | null
+          ai_context?: string | null
+          comment_count?: number | null
+          company_id?: string | null
+          company_name?: string | null
+          content?: string | null
+          created_at?: string | null
+          downvotes?: number | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          sentiment?: string | null
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string | null
+          upvotes?: number | null
+          user_id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       has_role: {

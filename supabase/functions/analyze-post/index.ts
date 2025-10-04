@@ -23,10 +23,11 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch the post
+    // PRIVACY: Fetch the post without exposing user identity
+    // We only fetch non-sensitive fields and never log user_id
     const { data: post, error: postError } = await supabase
       .from('posts')
-      .select('*')
+      .select('id, title, content, company_name, tags, sentiment, is_anonymous')
       .eq('id', postId)
       .single();
 
@@ -108,7 +109,8 @@ Please analyze this post and provide context.`
       throw updateError;
     }
 
-    console.log(`Successfully analyzed post ${postId}`);
+    // PRIVACY: Only log post ID, never user identity
+    console.log(`Successfully analyzed post ${postId} (anonymous: ${post.is_anonymous})`);
 
     return new Response(
       JSON.stringify({ 
