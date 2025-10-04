@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Search, Plus, MessageCircle, User, LogOut, Shield, Building2 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,12 +11,20 @@ export function Header() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdmin();
+  const [searchQuery, setSearchQuery] = useState("");
   
   const isActive = (path: string) => location.pathname === path;
 
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
   };
   
   return (
@@ -31,13 +40,15 @@ export function Header() {
 
         {/* Search Bar */}
         <div className="flex-1 max-w-md mx-8">
-          <div className="relative">
+          <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search companies, posts..." 
               className="pl-10 bg-background/50"
             />
-          </div>
+          </form>
         </div>
 
         {/* Navigation */}

@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { MapPin, Star, MessageCircle, Users, Building, ArrowLeft, TrendingUp, Clock, ThumbsUp } from "lucide-react";
 import { Header } from "@/components/Header";
 import { PostCard } from "@/components/PostCard";
+import { RelatedPosts } from "@/components/RelatedPosts";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +14,7 @@ import { usePosts } from "@/hooks/usePosts";
 export default function CompanyDetail() {
   const { companyId } = useParams();
   const [selectedTab, setSelectedTab] = useState("posts");
+  const [selectedPostSort, setSelectedPostSort] = useState<"trending" | "recent" | "popular">("trending");
   const { companies, loading: companiesLoading } = useCompanies();
   const { posts: companyPosts, loading: postsLoading, refetch } = usePosts(companyId);
   
@@ -148,120 +150,148 @@ export default function CompanyDetail() {
         </Card>
 
         {/* Content Tabs */}
-        <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3 mb-8">
-            <TabsTrigger value="posts" className="flex items-center">
-              <MessageCircle className="w-4 h-4 mr-2" />
-              Posts ({companyPosts.length})
-            </TabsTrigger>
-            <TabsTrigger value="insights" className="flex items-center">
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Insights
-            </TabsTrigger>
-            <TabsTrigger value="about" className="flex items-center">
-              <Building className="w-4 h-4 mr-2" />
-              About
-            </TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="lg:col-span-3">
+            <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+              <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3 mb-8">
+                <TabsTrigger value="posts" className="flex items-center">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Posts ({companyPosts.length})
+                </TabsTrigger>
+                <TabsTrigger value="insights" className="flex items-center">
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  Insights
+                </TabsTrigger>
+                <TabsTrigger value="about" className="flex items-center">
+                  <Building className="w-4 h-4 mr-2" />
+                  About
+                </TabsTrigger>
+              </TabsList>
 
-          <TabsContent value="posts">
-            {companyPosts.length > 0 ? (
-              <div className="space-y-6">
-                {/* Post Sorting */}
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm font-medium text-foreground">Sort by:</span>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      <TrendingUp className="w-4 h-4 mr-1" />
-                      Trending
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Clock className="w-4 h-4 mr-1" />
-                      Recent
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <ThumbsUp className="w-4 h-4 mr-1" />
-                      Popular
-                    </Button>
+              <TabsContent value="posts">
+                {companyPosts.length > 0 ? (
+                  <div className="space-y-6">
+                    {/* Post Sorting */}
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm font-medium text-foreground">Sort by:</span>
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant={selectedPostSort === "trending" ? "default" : "outline"} 
+                          size="sm"
+                          onClick={() => setSelectedPostSort("trending")}
+                        >
+                          <TrendingUp className="w-4 h-4 mr-1" />
+                          Trending
+                        </Button>
+                        <Button 
+                          variant={selectedPostSort === "recent" ? "default" : "outline"} 
+                          size="sm"
+                          onClick={() => setSelectedPostSort("recent")}
+                        >
+                          <Clock className="w-4 h-4 mr-1" />
+                          Recent
+                        </Button>
+                        <Button 
+                          variant={selectedPostSort === "popular" ? "default" : "outline"} 
+                          size="sm"
+                          onClick={() => setSelectedPostSort("popular")}
+                        >
+                          <ThumbsUp className="w-4 h-4 mr-1" />
+                          Popular
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Posts */}
+                    <div className="space-y-4">
+                      {sortedPosts[selectedPostSort].map((post) => (
+                        <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
+                      ))}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <Card className="p-8 text-center">
+                    <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-foreground mb-2">No posts yet</h3>
+                    <p className="text-muted-foreground mb-4">Be the first to share your experience with {company.name}</p>
+                    <Button className="bg-brand hover:bg-brand-hover text-brand-foreground">
+                      Write First Review
+                    </Button>
+                  </Card>
+                )}
+              </TabsContent>
 
-                {/* Posts */}
-                <div className="space-y-4">
-                  {sortedPosts.trending.map((post) => (
-                    <PostCard key={post.id} post={post} onAnalysisComplete={refetch} />
-                  ))}
+              <TabsContent value="insights">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Sentiment Overview</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sentiment-positive">Positive Reviews</span>
+                        <span className="font-medium">{sentimentCounts.positive || 0}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sentiment-negative">Negative Reviews</span>
+                        <span className="font-medium">{sentimentCounts.negative || 0}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sentiment-neutral">Neutral Reviews</span>
+                        <span className="font-medium">{sentimentCounts.neutral || 0}</span>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Popular Topics</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {companyPosts.flatMap(post => post.tags).filter((tag, index, arr) => arr.indexOf(tag) === index).slice(0, 8).map((tag) => (
+                        <Badge key={tag} variant="secondary">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </Card>
                 </div>
-              </div>
-            ) : (
-              <Card className="p-8 text-center">
-                <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-2">No posts yet</h3>
-                <p className="text-muted-foreground mb-4">Be the first to share your experience with {company.name}</p>
-                <Button className="bg-brand hover:bg-brand-hover text-brand-foreground">
-                  Write First Review
-                </Button>
-              </Card>
+              </TabsContent>
+
+              <TabsContent value="about">
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-4">Company Information</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <span className="font-medium text-foreground">Industry:</span>
+                      <span className="ml-2 text-muted-foreground">{company.industry}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-foreground">Company Size:</span>
+                      <span className="ml-2 text-muted-foreground">{company.tier}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-foreground">Location:</span>
+                      <span className="ml-2 text-muted-foreground">{company.location}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-foreground">Overall Rating:</span>
+                      <span className="ml-2 text-muted-foreground">{company.average_rating}/5.0 stars</span>
+                    </div>
+                  </div>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          {/* Sidebar with Related Posts */}
+          <div className="lg:col-span-1">
+            {companyPosts.length > 0 && companyPosts[0] && (
+              <RelatedPosts
+                currentPostId={companyPosts[0].id}
+                tags={companyPosts[0].tags}
+                companyId={companyId}
+                limit={5}
+              />
             )}
-          </TabsContent>
-
-          <TabsContent value="insights">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-4">Sentiment Overview</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sentiment-positive">Positive Reviews</span>
-                    <span className="font-medium">{sentimentCounts.positive || 0}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sentiment-negative">Negative Reviews</span>
-                    <span className="font-medium">{sentimentCounts.negative || 0}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sentiment-neutral">Neutral Reviews</span>
-                    <span className="font-medium">{sentimentCounts.neutral || 0}</span>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-4">Popular Topics</h3>
-                <div className="flex flex-wrap gap-2">
-                  {companyPosts.flatMap(post => post.tags).filter((tag, index, arr) => arr.indexOf(tag) === index).slice(0, 8).map((tag) => (
-                    <Badge key={tag} variant="secondary">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="about">
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Company Information</h3>
-              <div className="space-y-4">
-                <div>
-                  <span className="font-medium text-foreground">Industry:</span>
-                  <span className="ml-2 text-muted-foreground">{company.industry}</span>
-                </div>
-                <div>
-                  <span className="font-medium text-foreground">Company Size:</span>
-                  <span className="ml-2 text-muted-foreground">{company.tier}</span>
-                </div>
-                <div>
-                  <span className="font-medium text-foreground">Location:</span>
-                  <span className="ml-2 text-muted-foreground">{company.location}</span>
-                </div>
-                <div>
-                  <span className="font-medium text-foreground">Overall Rating:</span>
-                  <span className="ml-2 text-muted-foreground">{company.average_rating}/5.0 stars</span>
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </main>
     </div>
   );
