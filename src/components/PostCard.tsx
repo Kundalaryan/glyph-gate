@@ -1,9 +1,11 @@
-import { Clock } from "lucide-react";
+import { Clock, Bookmark } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { PostVoting } from "@/components/PostVoting";
 import { CommentSection } from "@/components/CommentSection";
 import { AIContextCard } from "@/components/AIContextCard";
+import { useBookmarks } from "@/hooks/useBookmarks";
 import type { Post } from "@/hooks/usePosts";
 import { useState } from "react";
 
@@ -15,6 +17,9 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, onClick, onAnalysisComplete, onTagClick }: PostCardProps) {
+  const { bookmarkedPosts, toggleBookmark, loading: bookmarkLoading } = useBookmarks();
+  const isBookmarked = bookmarkedPosts.has(post.id);
+
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -111,6 +116,19 @@ export function PostCard({ post, onClick, onAnalysisComplete, onTagClick }: Post
               downvotes={post.downvotes}
             />
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleBookmark(post.id);
+            }}
+            disabled={bookmarkLoading}
+            className="gap-2"
+          >
+            <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current text-brand' : ''}`} />
+            {isBookmarked ? 'Saved' : 'Save'}
+          </Button>
         </div>
 
         {/* Comments Section */}

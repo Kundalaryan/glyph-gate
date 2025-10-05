@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Plus, MessageCircle, User, LogOut, Shield, Building2 } from "lucide-react";
+import { Search, Plus, MessageCircle, User, LogOut, Shield, Building2, LayoutDashboard } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,6 +69,16 @@ export function Header() {
           >
             Companies
           </Link>
+          {user && (
+            <Link 
+              to="/dashboard" 
+              className={`text-sm font-medium transition-colors hover:text-brand ${
+                isActive('/dashboard') ? 'text-brand' : 'text-muted-foreground'
+              }`}
+            >
+              Dashboard
+            </Link>
+          )}
           {isAdmin && (
             <Link 
               to="/admin" 

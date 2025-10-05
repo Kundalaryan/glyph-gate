@@ -1,6 +1,8 @@
-import { MapPin, MessageCircle, Star } from "lucide-react";
+import { MapPin, MessageCircle, Star, Bell, BellOff } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useCompanyFollows } from "@/hooks/useCompanyFollows";
 import type { Company } from "@/data/sampleData";
 
 interface CompanyCardProps {
@@ -9,6 +11,9 @@ interface CompanyCardProps {
 }
 
 export function CompanyCard({ company, onClick }: CompanyCardProps) {
+  const { followedCompanies, toggleFollow, loading } = useCompanyFollows();
+  const isFollowing = followedCompanies.has(company.id);
+
   const getTierColor = (tier: string) => {
     switch (tier.toLowerCase()) {
       case 'fortune 500':
@@ -43,9 +48,27 @@ export function CompanyCard({ company, onClick }: CompanyCardProps) {
             <p className="text-sm text-muted-foreground">{company.industry}</p>
           </div>
         </div>
-        <Badge variant="outline" className={getTierColor(company.tier)}>
-          {company.tier}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className={getTierColor(company.tier)}>
+            {company.tier}
+          </Badge>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleFollow(company.id);
+            }}
+            disabled={loading}
+            title={isFollowing ? 'Unfollow' : 'Follow'}
+          >
+            {isFollowing ? (
+              <BellOff className="w-4 h-4 text-brand" />
+            ) : (
+              <Bell className="w-4 h-4" />
+            )}
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-2 mb-4">
